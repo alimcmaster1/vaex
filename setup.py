@@ -24,6 +24,7 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
 class DevelopCmd(develop):
     def run(self):
+        relative = os.path.abspath(os.path.join('packages', 'vaex-core', 'vaex'))
         for package in packages:
             with cwd(os.path.join('packages', package)):
                 os.system('python -m pip install -e .')
@@ -39,9 +40,10 @@ class DevelopCmd(develop):
                     if os.path.exists(name) and os.readlink(name) == rel_source:
                         print('symlink ok')
                     else:
-                        print('old symlink',  os.readlink(name))
-                        # if os.path.exists(name):
-                        os.remove(name)
+                        try:
+                            os.remove(name)
+                        except:
+                            pass
                         os.symlink(rel_source, name)
 
 class InstallCmd(install):
